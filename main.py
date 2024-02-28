@@ -15,7 +15,7 @@ def main():
 
     print('cleaning data...')
     num_cols = ['qty', 'price_per_unit']
-    df = clean_data(df, num_cols)
+    df = clean_data(df, num_cols, ['contractor_name', 'location'])
 
     df = join_with_audit_request_and_filter_deleted(df)
     df = join_with_daily_expenses_item(df)

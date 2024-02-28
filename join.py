@@ -19,7 +19,7 @@ def join_with_audit_request_and_filter_deleted(df):
 def join_with_daily_expenses_item(df):
     print('reading daily expense items...')
 
-    cols = ['id', 'daily_expenses_id']
+    cols = ['id', 'daily_expenses_id', 'total_amount']
     df_daily_expenses_item = pd.read_csv(path + '\\daily_expenses_item.csv', usecols=cols)
     df_result = pd.merge(df, df_daily_expenses_item, left_on='item_id',
                          right_on='id', suffixes=('', '_daily_expenses_item'))

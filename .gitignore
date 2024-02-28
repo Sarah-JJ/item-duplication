@@ -1,3 +1,4 @@
 .idea
 *.xls;xlsx;csv
 analyze.py
+__pycache__/
