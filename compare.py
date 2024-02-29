@@ -1,11 +1,35 @@
 import pandas as pd
-import re
+from Levenshtein import ratio
+from consts import compare_using_levenshtein_distance, print_separator
+
+
+def compare_text_col_ratio(row1, row2, col, total_contribution_to_duplication):
+    value1 = row1[col]
+    value2 = row2[col]
+
+    if compare_using_levenshtein_distance:
+        similarity_percent = ratio(value1, value2)
+        if similarity_percent > 0.75:
+            print(value1)
+            print(value2)
+            print(similarity_percent)
+            print(print_separator)
+            print('\n')
+            return similarity_percent * total_contribution_to_duplication
+        else:
+            return 0
+
+    elif value1 == value2:
+        return total_contribution_to_duplication
+
+    else:
+        return 0
 
 
 def get_duplication_probability(row1, row2):
     duplication_probability = 0
 
-    project_col = 'project'
+    project_col = 'project_id'
     project1 = row1[project_col]
     project2 = row2[project_col]
 
@@ -17,55 +41,24 @@ def get_duplication_probability(row1, row2):
     if not_empty and row1[expense_date_col] == row2[expense_date_col]:
         duplication_probability += 0.25
 
-    contractor_col = 'contractor_name'
-    contractor1 = row1[contractor_col]
-    contractor2 = row2[contractor_col]
+    duplication_probability += compare_text_col_ratio(row1, row2, 'contractor_name', 0.1)
+    duplication_probability += compare_text_col_ratio(row1, row2, 'location', 0.1)
 
-    project_col = 'project'
-    row1_total = row1[project_col]
-    row2_total = row2[project_col]
+    work_type_col = 'work_type_id'
+    work_type1 = row1[work_type_col]
+    work_type2 = row2[work_type_col]
 
-    if row1_total > 0 and row2_total > 0:
-        if row1_total == row2_total:
-            duplication_probability += 30
-        else:
-            ratio1_2 = row1_total / row2_total
-            ratio2_1 = row2_total / row1_total
-            if 0.8 <= ratio1_2 < 1 or 0.8 <= ratio2_1 < 1:
-                duplication_probability += 10
+    if work_type1 == work_type2:
+        duplication_probability += 0.1
 
-    attachment_field = 'Main Attachment/Name'
-    row1_attachment_name = str.lower(str(row1[attachment_field]))
-    row2_attachment_name = str.lower(str(row2[attachment_field]))
+    quantity_col = 'qty'
+    qty1 = row1[quantity_col]
+    qty2 = row2[quantity_col]
 
-    if row1_attachment_name != "" and row2_attachment_name != "":
-        if row1_attachment_name == row2_attachment_name:
-            duplication_probability += 40
-        else:
-            row1_normalized_name = re.sub(r'(\(\d+\)\s*)+(?=\.\w+)', '', row1_attachment_name)
-            row2_normalized_name = re.sub(r'(\(\d+\)\s*)+(?=\.\w+)', '', row2_attachment_name)
+    if qty1 == qty2:
+        duplication_probability += 0.1
 
-            if row1_normalized_name == row2_normalized_name:
-                duplication_probability += 15
-
-    if not pd.isna(row1['Timesheet Line/Date']) and not pd.isna(row2['Timesheet Line/Date']):
-        if row1['Timesheet Line/Date'] == row2['Timesheet Line/Date']:
-            if str.lower(row1['Task Type']) == 'cb' and str.lower(row2['Task Type']) == 'cb':
-                duplication_probability += 5
-            else:
-                duplication_probability += 25
-
-    sum_value_1 = sum(row1[column] for column in meter_cols)
-    sum_value_2 = sum(row2[column] for column in meter_cols)
-
-    if sum_value_1 > 0 and sum_value_2 > 0:
-        if sum_value_1 == sum_value_2:
-            duplication_probability += 50
-        else:
-            sum_ratio1_2 = sum_value_1 / sum_value_2
-            sum_ratio2_1 = sum_value_2 / sum_value_1
-            if 0.8 <= sum_ratio1_2 < 1 or 0.8 <= sum_ratio2_1 < 1:
-                duplication_probability += 10
+    # TODO: compare attachments
 
     return duplication_probability
 
@@ -75,7 +68,7 @@ def compare(df, df_blank):
 
     for index1, row1 in df.iterrows():
         for index2, row2 in df.iterrows():
-            print(f"Comparing record {row1['Name']},{row2['Name']}...")
+            print(f"Comparing record {index1},{index2}...")
             if index1 >= index2:
                 continue
 

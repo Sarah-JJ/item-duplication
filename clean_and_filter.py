@@ -13,6 +13,7 @@ def filter_on_expense_date_after(df, date_value):
 
 
 def clean_data(df, num_cols=[], text_cols=[], date_cols=[]):
+    print('cleaning data...')
     type_cast_and_fillna(df, num_cols, date_cols)
 
     df[text_cols] = df[text_cols].astype(str)
