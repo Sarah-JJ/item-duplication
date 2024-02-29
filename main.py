@@ -4,7 +4,7 @@ from compare import compare
 from create_result import create_result_df
 from join import join_with_daily_expenses_item, join_with_audit_request_and_filter_deleted, \
     join_with_unrejected_daily_expenses
-from consts import path, filter_date
+from consts import PATH, FILTER_DATE
 
 
 def main():
@@ -13,9 +13,9 @@ def main():
 
     print('reading audit_request_lines...')
 
-    df = pd.read_csv(path + '\\audit_request_line.csv', usecols=contractor_cols)
+    df = pd.read_csv(PATH + '\\audit_request_line.csv', usecols=contractor_cols)
     df = df[df['expenses_type'] == 'contractor']
-    df = filter_on_expense_date_after(df, filter_date)
+    df = filter_on_expense_date_after(df, FILTER_DATE)
 
     df = join_with_audit_request_and_filter_deleted(df)
     df = join_with_daily_expenses_item(df)

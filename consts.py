@@ -1,5 +1,6 @@
-path = 'D:\Sana\drda\odoodb'
+PATH = 'D:\Sana\drda\odoodb'
 print_separator = '\n------------------------------------------------------------------------------------\n\n'
-filter_date = '2024-02-01'
-normalize_arabic_text_in_columns = ['contractor_name', 'location']
-compare_using_levenshtein_distance = True
+FILTER_DATE = '2024-02-05'
+NORMALIZE_ARABIC_TEXT_COLS = ['contractor_name', 'location']
+COMPARE_WITH_LEVENSHTEIN = True
+MIN_PROBABILITY = 0.5
