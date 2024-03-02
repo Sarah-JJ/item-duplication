@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def create_result_df(df_list, output_file):
+def create_result(df_list, output_file=''):
     print('creating dataframes...')
 
     if df_list:
@@ -11,4 +11,4 @@ def create_result_df(df_list, output_file):
         df.reset_index(drop=True, inplace=True)
 
         print(f'creating {output_file} ...')
-        df.to_excel(output_file, index=False)
+        df.to_csv(output_file, index=False)

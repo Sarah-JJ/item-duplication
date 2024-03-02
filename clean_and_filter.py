@@ -31,3 +31,7 @@ def type_cast_and_fillna(df, num_columns, date_cols):
         df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0).astype(int)
 
     return df
+
+
+def filter_audit_request_line_attachment_rel(df, ids):
+    return df

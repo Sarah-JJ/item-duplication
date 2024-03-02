@@ -1,4 +1,4 @@
-check_cols_for_equality = [
+CHECK_FOR_EQUALITY_COLS = [
     {
         'name': 'project_id',
         'contribution': 0.2,
@@ -6,10 +6,6 @@ check_cols_for_equality = [
     {
         'name': 'date_of_expenses',
         'contribution': 0.25,
-    },
-    {
-        'name': 'contractor_name',
-        'contribution': 0.1,
     },
     {
         'name': 'work_type_id',
@@ -25,7 +21,7 @@ check_cols_for_equality = [
     }
 ]
 
-text_cols = [
+TEXT_COLS = [
     {
         'name': 'contractor_name',
         'contribution': 0.1
@@ -35,3 +31,5 @@ text_cols = [
         'contribution': 0.05
     }
 ]
+
+ATTACHMENTS_WEIGHT = 0.1

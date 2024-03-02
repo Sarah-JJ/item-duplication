@@ -3,4 +3,10 @@ print_separator = '\n-----------------------------------------------------------
 FILTER_DATE = '2024-02-05'
 NORMALIZE_ARABIC_TEXT_COLS = ['contractor_name', 'location']
 COMPARE_WITH_LEVENSHTEIN = True
-MIN_SIMILARITY = 0.5
+MIN_SIMILARITY = 0.7
+
+SIMILARITY_LEVELS = {
+    'high': 0.7,
+    'mod': 0.4,
+    'low': 0.1,
+}

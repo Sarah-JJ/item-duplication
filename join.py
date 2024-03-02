@@ -45,3 +45,24 @@ def join_with_unrejected_daily_expenses(df):
     print(f'{df_result}{print_separator}')
 
     return df_result
+
+
+def get_audit_request_line_attachments(ids):
+    print('reading audit_request_line_attachment_rel...')
+
+    df_audit_request_line_attachment_rel = pd.read_csv(PATH + '\\audit_request_line_ir_attachment_rel.csv')
+    filtered_df = df_audit_request_line_attachment_rel[df_audit_request_line_attachment_rel['audit_request_line_id'].isin(ids)]
+    print(f'{filtered_df} {print_separator}')
+
+    ir_attachment_cols = ['id', 'name']
+    df_ir_attachment = pd.read_csv(PATH + '\\ir_attachment.csv', usecols=ir_attachment_cols, index_col='id')
+
+    df_result = pd.merge(filtered_df, df_ir_attachment, left_on='ir_attachment_id', right_on='id')
+    print(f'{df_result} {print_separator}')
+
+    df_result.drop('ir_attachment_id', axis=1, inplace=True)
+    print(f'{df_result}{print_separator}')
+
+    return df_result
+
+

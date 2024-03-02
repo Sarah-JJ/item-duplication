@@ -1,10 +1,10 @@
 import pandas as pd
 from clean_and_filter import filter_on_expense_date_after, clean_data
-from compare import compare
-from create_result import create_result_df
+from compare import compare, compare_attachments_and_create_result
 from join import join_with_daily_expenses_item, join_with_audit_request_and_filter_deleted, \
-    join_with_unrejected_daily_expenses
+    join_with_unrejected_daily_expenses, get_audit_request_line_attachments
 from consts import PATH, FILTER_DATE
+from utils import create_blank_df
 
 
 def main():
@@ -25,14 +25,11 @@ def main():
 
     df = join_with_unrejected_daily_expenses(df)
 
-    blank_row = pd.Series({col: None for col in df.columns}, dtype=object)
-    df_blank = pd.DataFrame(blank_row).transpose()
+    unique_ids, df_pairs = compare(df)
+    df_audit_request_line_attachments = get_audit_request_line_attachments(unique_ids)
 
-    high, mod, low = compare(df, df_blank)
-
-    create_result_df(high, 'high.xlsx')
-    create_result_df(mod, 'mod.xlsx')
-    create_result_df(low, 'low.xlsx')
+    blank_df = create_blank_df(df.columns)
+    compare_attachments_and_create_result(df_audit_request_line_attachments, df_pairs, blank_df)
 
     print(df)
 
