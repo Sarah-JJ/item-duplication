@@ -57,7 +57,7 @@ def compare(df):
 
             similarity_percent = calculate_pair_similarity_percent(row1, row2)
 
-            if (similarity_percent + 0.1) < MIN_SIMILARITY:
+            if (similarity_percent + ATTACHMENTS_WEIGHT) < MIN_SIMILARITY:
                 continue
 
             unique_ids.add(row1['id'])

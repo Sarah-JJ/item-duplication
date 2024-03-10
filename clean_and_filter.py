@@ -18,6 +18,7 @@ def clean_data(df, num_cols=[], text_cols=[], date_cols=[]):
 
     df[text_cols] = df[text_cols].astype(str)
     df[text_cols] = df[text_cols].apply(lambda x: x.str.strip())
+
     df[NORMALIZE_ARABIC_TEXT_COLS] = df[NORMALIZE_ARABIC_TEXT_COLS].applymap(lambda x: normalize(x))
 
     return df
