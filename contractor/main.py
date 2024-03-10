@@ -1,9 +1,10 @@
 import pandas as pd
+import path_initializer
 from clean_and_filter import filter_on_expense_date_after, clean_data
 from compare import compare, compare_attachments_and_create_result
 from join import join_with_daily_expenses_item, join_with_audit_request_and_filter_deleted, \
     join_with_unrejected_daily_expenses, get_audit_request_line_attachments
-from consts import PATH, FILTER_DATE
+from contractor.config import PATH, FILTER_DATE
 from utils import create_blank_df
 
 

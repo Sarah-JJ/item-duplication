@@ -1,5 +1,5 @@
 import pandas as pd
-from consts import NORMALIZE_ARABIC_TEXT_COLS
+from contractor.config import NORMALIZE_ARABIC_TEXT_COLS
 from normalize_arabic_text import normalize_arabic_text as normalize
 
 

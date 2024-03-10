@@ -24,11 +24,13 @@ CHECK_FOR_EQUALITY_COLS = [
 TEXT_COLS = [
     {
         'name': 'contractor_name',
-        'contribution': 0.1
+        'contribution': 0.1,
+        'levenshtein_threshold': 0.75
     },
     {
         'name': 'location',
-        'contribution': 0.05
+        'contribution': 0.05,
+        'levenshtein_threshold': 0.75
     }
 ]
 

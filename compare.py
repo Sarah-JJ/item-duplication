@@ -1,18 +1,18 @@
 import pandas as pd
 from Levenshtein import ratio
 
-from column_weights import CHECK_FOR_EQUALITY_COLS, TEXT_COLS, ATTACHMENTS_WEIGHT
-from consts import COMPARE_WITH_LEVENSHTEIN, MIN_SIMILARITY, SIMILARITY_LEVELS, print_separator
+from contractor.column_weights import CHECK_FOR_EQUALITY_COLS, TEXT_COLS, ATTACHMENTS_WEIGHT
+from contractor.config import COMPARE_WITH_LEVENSHTEIN, MIN_SIMILARITY, SIMILARITY_LEVELS, print_separator
 from create_result import create_result
 
 
-def calculate_text_similarity_ratio(row1, row2, col, col_weight):
+def calculate_text_similarity_ratio(row1, row2, col, col_weight, levenshtein_threshold):
     value1 = row1[col]
     value2 = row2[col]
 
     if COMPARE_WITH_LEVENSHTEIN:
         similarity_percent = ratio(value1, value2)
-        if similarity_percent >= 0.75:
+        if similarity_percent >= levenshtein_threshold:
             return similarity_percent * col_weight
         else:
             return 0
@@ -34,15 +34,15 @@ def calculate_equality_ratio(row1, row2, col, total_contribution_to_duplication)
 
 
 def calculate_pair_similarity_percent(row1, row2):
-    duplication_percent = 0
+    similarity_percent = 0
 
     for col in CHECK_FOR_EQUALITY_COLS:
-        duplication_percent += calculate_equality_ratio(row1, row2, col['name'], col['contribution'])
+        similarity_percent += calculate_equality_ratio(row1, row2, col['name'], col['contribution'])
 
     for col in TEXT_COLS:
-        duplication_percent += calculate_text_similarity_ratio(row1, row2, col['name'], col['contribution'])
+        similarity_percent += calculate_text_similarity_ratio(row1, row2, col['name'], col['contribution'], col['levenshtein_threshold'])
 
-    return duplication_percent
+    return similarity_percent
 
 
 def compare(df):

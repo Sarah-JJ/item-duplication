@@ -1,5 +1,5 @@
 import pandas as pd
-from consts import print_separator, PATH
+from contractor.config import print_separator, PATH
 
 
 def join_with_audit_request_and_filter_deleted(df):
