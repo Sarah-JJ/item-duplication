@@ -1,5 +1,4 @@
 import pandas as pd
-from contractor.config import NORMALIZE_ARABIC_TEXT_COLS
 from normalize_arabic_text import normalize_arabic_text as normalize
 
 
@@ -19,8 +18,11 @@ def clean_data(df, num_cols=[], text_cols=[], date_cols=[]):
     df[text_cols] = df[text_cols].astype(str)
     df[text_cols] = df[text_cols].apply(lambda x: x.str.strip())
 
-    df[NORMALIZE_ARABIC_TEXT_COLS] = df[NORMALIZE_ARABIC_TEXT_COLS].applymap(lambda x: normalize(x))
+    return df
 
+
+def normalize_arabic_text(df, cols):
+    df[cols] = df[cols].applymap(lambda x: normalize(x))
     return df
 
 
