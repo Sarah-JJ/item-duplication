@@ -29,7 +29,8 @@ def calculate_equal_columns_ratio(row1, row2, col, weight):
     return 0
 
 
-def compare(df, equality_comparison_cols, text_comparison_cols, attachments_weight, similarity_threshold, compare_with_levenshtein):
+def compare(df, equality_comparison_cols, text_comparison_cols,
+            attachments_weight, similarity_threshold, compare_with_levenshtein):
     unique_ids = set()
     df_pairs = []
 
