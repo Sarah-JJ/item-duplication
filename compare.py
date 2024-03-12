@@ -4,6 +4,9 @@ from create_result import create_result
 
 
 def calculate_text_similarity_ratio(value1, value2, col_weight, compare_with_levenshtein, levenshtein_threshold):
+    if value1 == "" or value2 == "":
+        return 0
+
     if compare_with_levenshtein:
         similarity_percent = ratio(value1, value2)
         if similarity_percent >= levenshtein_threshold:
@@ -11,7 +14,7 @@ def calculate_text_similarity_ratio(value1, value2, col_weight, compare_with_lev
         else:
             return 0
 
-    elif value1 == value2:
+    if value1 == value2:
         return col_weight
     else:
         return 0
@@ -33,7 +36,11 @@ def compare(df, equality_comparison_cols, text_comparison_cols, attachments_weig
     for index1, row1 in df.iterrows():
         for index2, row2 in df.iterrows():
             print(f"Comparing record {index1},{index2}...")
-            if index1 >= index2:
+
+            if index2 <= index1:
+                continue
+
+            if row1['daily_expenses_id'] == row2['daily_expenses_id']:
                 continue
 
             similarity_percent = 0
