@@ -1,4 +1,6 @@
 
+# this will spoil words with the affected letters if they're in their middle form,
+# but we'll accept this without checking for letter form to avoid longer running time
 def normalize_arabic_text(text):
 
     characters = [

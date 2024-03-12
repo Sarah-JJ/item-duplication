@@ -31,11 +31,10 @@ def join_with_daily_expenses_item(df):
     return df_result
 
 
-def join_with_unrejected_daily_expenses(df):
+def join_with_unrejected_daily_expenses(df, use_cols):
     print('reading daily expenses...')
 
-    cols = ['id', 'project_id', 'state']
-    df_daily_expenses = pd.read_csv(PATH + '\\daily_expenses.csv', usecols=cols)
+    df_daily_expenses = pd.read_csv(PATH + '\\daily_expenses.csv', usecols=use_cols)
     df_daily_expenses = df_daily_expenses[df_daily_expenses['state'] != 'rejected']
     print(f'{df_daily_expenses} {print_separator}')
 
