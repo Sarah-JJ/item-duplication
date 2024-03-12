@@ -11,12 +11,12 @@ from utils import create_blank_df
 
 
 def main():
-    contractor_cols = ['id', 'expenses_type', 'request_id', 'date_of_expenses',
+    columns = ['id', 'expenses_type', 'request_id', 'date_of_expenses',
                        'contractor_name', 'location', 'work_type_id', 'qty']
 
     print('reading audit_request_lines...')
 
-    df = pd.read_csv(PATH + '\\audit_request_line.csv', usecols=contractor_cols)
+    df = pd.read_csv(PATH + '\\audit_request_line.csv', usecols=columns)
     df = df[df['expenses_type'] == 'contractor']
     df = filter_on_expense_date_after(df, FILTER_DATE)
 
@@ -27,7 +27,7 @@ def main():
     df = clean_data(df, num_cols, [col['name'] for col in TEXT_COMPARISON_COLS])
     df = normalize_arabic_text(df, NORMALIZE_ARABIC_COLS)
 
-    df = join_with_unrejected_daily_expenses(df)
+    df = join_with_unrejected_daily_expenses(df, ['id', 'project_id', 'state'])
 
     unique_ids, df_pairs = compare(df, EQUALITY_COMPARISON_COLS, TEXT_COMPARISON_COLS,
                                    ATTACHMENTS_WEIGHT, SIMILARITY_THRESHOLD, COMPARE_WITH_LEVENSHTEIN)
