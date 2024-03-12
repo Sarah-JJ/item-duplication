@@ -20,18 +20,18 @@ def main():
     df = df[df['expenses_type'] == 'contractor']
     df = filter_on_expense_date_after(df, FILTER_DATE)
 
-    df = join_with_audit_request_and_filter_deleted(df)
-    df = join_with_daily_expenses_item(df)
+    df = join_with_audit_request_and_filter_deleted(df, PATH)
+    df = join_with_daily_expenses_item(df, PATH)
 
     num_cols = ['qty', 'work_type_id', 'total_amount']
     df = clean_data(df, num_cols, [col['name'] for col in TEXT_COMPARISON_COLS])
     df = normalize_arabic_text(df, NORMALIZE_ARABIC_COLS)
 
-    df = join_with_unrejected_daily_expenses(df, ['id', 'project_id', 'state'])
+    df = join_with_unrejected_daily_expenses(df, PATH, ['id', 'project_id', 'state'])
 
     unique_ids, df_pairs = compare(df, EQUALITY_COMPARISON_COLS, TEXT_COMPARISON_COLS,
                                    ATTACHMENTS_WEIGHT, SIMILARITY_THRESHOLD, COMPARE_WITH_LEVENSHTEIN)
-    df_audit_request_line_attachments = get_audit_request_line_attachments(unique_ids)
+    df_audit_request_line_attachments = get_audit_request_line_attachments(unique_ids, PATH)
 
     # creating blank_df outside the method to avoid overhead of creating a blank df multiple times with every iteration
     blank_df = create_blank_df(df.columns)
