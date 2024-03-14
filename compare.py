@@ -1,6 +1,6 @@
 import pandas as pd
 from Levenshtein import ratio
-from create_result import create_result
+from create_result import create_output_files
 
 
 def calculate_text_similarity_ratio(value1, value2, col_weight, compare_with_levenshtein, levenshtein_threshold):
@@ -50,7 +50,10 @@ def compare(df, equality_comparison_cols, text_comparison_cols,
                 similarity_percent += calculate_equal_columns_ratio(row1, row2, col['name'], col['weight'])
 
             for col in text_comparison_cols:
-                similarity_percent += calculate_text_similarity_ratio(row1[col['name']], row2[col['name']], col['weight'], compare_with_levenshtein, col['levenshtein_threshold'])
+                similarity_percent += calculate_text_similarity_ratio(row1[col['name']], row2[col['name']],
+                                                                      col['weight'],
+                                                                      compare_with_levenshtein,
+                                                                      col['levenshtein_threshold'])
 
             if (similarity_percent + attachments_weight) < similarity_threshold:
                 continue
@@ -89,7 +92,32 @@ def calculate_attachments_similarity(attachments_set1, attachments_set2, weight)
     return intersection_ratio * weight
 
 
-def compare_attachments_and_create_result(df_audit_request_line_attachments, df_pairs, df_blank, weight, similarity_levels):
+def create_result(df_pairs, df_blank, similarity_levels):
+    high, mod, low = [], [], []
+
+    for df_pair in df_pairs:
+        item1 = df_pair['item1']
+        df1 = item1['item']
+        df1['similarity'] = df_pair['similarity']
+
+        item2 = df_pair['item2']
+        df2 = item2['item']
+        df2['similarity'] = df_pair['similarity']
+
+        if df_pair['similarity'] > similarity_levels['high']:
+            high.extend([df1, df2, df_blank])
+        elif df_pair['similarity'] > similarity_levels['mod']:
+            mod.extend([df1, df2, df_blank])
+        elif df_pair['similarity'] > similarity_levels['low']:
+            low.extend([df1, df2, df_blank])
+
+    create_output_files(high, 'high.csv')
+    create_output_files(mod, 'mod.csv')
+    create_output_files(low, 'low.csv')
+
+
+def compare_attachments_and_create_result(df_audit_request_line_attachments, df_pairs, df_blank, weight,
+                                          similarity_levels):
     high, mod, low = [], [], []
 
     for df_pair in df_pairs:
@@ -127,6 +155,6 @@ def compare_attachments_and_create_result(df_audit_request_line_attachments, df_
         elif updated_similarity > similarity_levels['low']:
             low.extend([df1, df2, df_blank])
 
-    create_result(high, 'high.csv')
-    create_result(mod, 'mod.csv')
-    create_result(low, 'low.csv')
+    create_output_files(high, 'high.csv')
+    create_output_files(mod, 'mod.csv')
+    create_output_files(low, 'low.csv')
