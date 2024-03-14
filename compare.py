@@ -85,6 +85,9 @@ def calculate_attachments_similarity(attachments_set1, attachments_set2, weight)
     intersecting_elements = attachments_set1 & attachments_set2
     intersection_count = len(intersecting_elements)
 
+    if len(attachments_set1) == 0 or len(attachments_set2) == 0:
+        return 0
+
     attachments1_intersection_ratio = intersection_count / len(attachments_set1)
     attachments2_intersection_ratio = intersection_count / len(attachments_set2)
 
