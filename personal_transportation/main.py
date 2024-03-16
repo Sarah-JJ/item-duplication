@@ -37,8 +37,6 @@ def main():
     compare_attachments_and_create_result(df_audit_request_line_attachments, df_pairs, blank_df,
                                           ATTACHMENTS_WEIGHT, SIMILARITY_LEVELS)
 
-    print(df)
-
 
 if __name__ == '__main__':
     main()
