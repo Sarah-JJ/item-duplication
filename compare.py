@@ -1,7 +1,7 @@
 import pandas as pd
 from Levenshtein import ratio
 from create_result import create_output_files
-
+from datetime import timedelta
 
 def calculate_text_similarity_ratio(value1, value2, col_weight, compare_with_levenshtein, levenshtein_threshold):
     if value1 == "" or value2 == "":
@@ -29,19 +29,36 @@ def calculate_equal_columns_ratio(row1, row2, col, weight):
     return 0
 
 
+def skip_comparison(index1, index2, row1, row2, days_after, days_before):
+    if index2 <= index1:
+        return True
+
+    if row1['daily_expenses_id'] == row2['daily_expenses_id']:
+        return True
+
+    filter_date_after = row1['create_date'] - timedelta(days=days_after)
+    filter_date_before = row1['create_date'] + timedelta(days=days_before)
+    print(f'row1[\'create_date\']: {row1["create_date"]}')
+    print(f'row2[\'create_date\']: {row2["create_date"]}')
+    print(f'filter_date_after = {filter_date_after}')
+    print(f'filter_date_before = {filter_date_before}')
+
+    if row2['create_date'] < filter_date_after or row2['create_date'] > filter_date_before:
+        print('comparison skipped')
+        return True
+
+    return False
+
 def compare(df, equality_comparison_cols, text_comparison_cols,
-            attachments_weight, similarity_threshold, compare_with_levenshtein):
+            attachments_weight, similarity_threshold, compare_with_levenshtein, compare_with_records_created_days_after, compare_with_records_created_days_before):
     unique_ids = set()
     df_pairs = []
 
     for index1, row1 in df.iterrows():
         for index2, row2 in df.iterrows():
-            print(f"Comparing record {index1},{index2}...")
+            print(f"Comparing record {index1}, {index2}...")
 
-            if index2 <= index1:
-                continue
-
-            if row1['daily_expenses_id'] == row2['daily_expenses_id']:
+            if skip_comparison(index1, index2, row1, row2, compare_with_records_created_days_after, compare_with_records_created_days_before):
                 continue
 
             similarity_percent = 0
