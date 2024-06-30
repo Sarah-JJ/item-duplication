@@ -36,14 +36,14 @@ def skip_comparison(index1, index2, row1, row2, days_after, days_before):
     if row1['daily_expenses_id'] == row2['daily_expenses_id']:
         return True
 
-    filter_date_after = row1['create_date'] - timedelta(days=days_after)
-    filter_date_before = row1['create_date'] + timedelta(days=days_before)
-    print(f'row1[\'create_date\']: {row1["create_date"]}')
-    print(f'row2[\'create_date\']: {row2["create_date"]}')
+    filter_date_after = row1['date_of_expenses'] - timedelta(days=days_after)
+    filter_date_before = row1['date_of_expenses'] + timedelta(days=days_before)
+    print(f'row1[\'date_of_expenses\']: {row1["date_of_expenses"]}')
+    print(f'row2[\'date_of_expenses\']: {row2["date_of_expenses"]}')
     print(f'filter_date_after = {filter_date_after}')
     print(f'filter_date_before = {filter_date_before}')
 
-    if row2['create_date'] < filter_date_after or row2['create_date'] > filter_date_before:
+    if row2['date_of_expenses'] < filter_date_after or row2['date_of_expenses'] > filter_date_before:
         print('comparison skipped')
         return True
 
