@@ -6,13 +6,13 @@ from join import join_with_daily_expenses_item, join_with_audit_request_and_filt
     join_with_unrejected_daily_expenses, get_audit_request_line_attachments
 from inpp.column_weights import TEXT_COMPARISON_COLS, EQUALITY_COMPARISON_COLS, ATTACHMENTS_WEIGHT
 from inpp.config import PATH, FILTER_DATE, NORMALIZE_ARABIC_COLS, SIMILARITY_THRESHOLD, COMPARE_WITH_LEVENSHTEIN, \
-    SIMILARITY_LEVELS
+    SIMILARITY_LEVELS, COMPARE_WITH_RECORDS_CREATED_DAYS_BEFORE, COMPARE_WITH_RECORDS_CREATED_DAYS_AFTER
 from utils import create_blank_df
 
 
 def main():
     columns = ['id', 'responsible_contractor_name', 'supervisor_name', 'date_of_work',
-               'date_of_expenses', 'expenses_type', 'request_id']
+               'date_of_expenses', 'expenses_type', 'request_id', 'create_date']
 
     print('reading audit_request_lines...')
 
@@ -23,13 +23,14 @@ def main():
     df = join_with_audit_request_and_filter_deleted(df, PATH)
     df = join_with_daily_expenses_item(df, PATH)
 
-    df = clean_data(df, [], [col['name'] for col in TEXT_COMPARISON_COLS])
+    df = clean_data(df, [], [col['name'] for col in TEXT_COMPARISON_COLS], ['create_date'])
     df = normalize_arabic_text(df, NORMALIZE_ARABIC_COLS)
 
     df = join_with_unrejected_daily_expenses(df, PATH, ['id', 'state', 'project_id'])
 
     unique_ids, df_pairs = compare(df, EQUALITY_COMPARISON_COLS, TEXT_COMPARISON_COLS,
-                                   ATTACHMENTS_WEIGHT, SIMILARITY_THRESHOLD, COMPARE_WITH_LEVENSHTEIN)
+            ATTACHMENTS_WEIGHT, SIMILARITY_THRESHOLD, COMPARE_WITH_LEVENSHTEIN, COMPARE_WITH_RECORDS_CREATED_DAYS_AFTER,
+            COMPARE_WITH_RECORDS_CREATED_DAYS_BEFORE)
 
     # creating blank_df outside the method to avoid overhead of creating a blank df multiple times with every iteration
     blank_df = create_blank_df(df.columns)

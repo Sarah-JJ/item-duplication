@@ -51,7 +51,7 @@ def get_audit_request_line_attachments(ids, file_path):
 
     df_audit_request_line_attachment_rel = pd.read_csv(file_path + '\\audit_request_line_ir_attachment_rel.csv')
     filtered_df = df_audit_request_line_attachment_rel[df_audit_request_line_attachment_rel['audit_request_line_id'].isin(ids)]
-    print(f'{filtered_df} {print_separator}')
+    print(f'{filtered_df}{print_separator}')
 
     ir_attachment_cols = ['id', 'name']
     df_ir_attachment = pd.read_csv(file_path + '\\ir_attachment.csv', usecols=ir_attachment_cols, index_col='id')

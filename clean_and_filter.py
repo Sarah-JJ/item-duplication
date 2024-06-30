@@ -3,7 +3,7 @@ from normalize_arabic_text import normalize_arabic_text as normalize
 
 
 def filter_on_expense_date_after(df, date_value):
-    df['date_of_expenses'] = pd.to_datetime(df['date_of_expenses'])
+    df['date_of_expenses'] = pd.to_datetime(df['date_of_expenses'], errors='coerce')
 
     filter_date = pd.to_datetime(date_value)
     filtered_df = df[df['date_of_expenses'] > filter_date]
